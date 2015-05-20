@@ -1,0 +1,21 @@
+{
+	"name": "scientiamobile/wurflcloud",
+	"description": "ScientiaMobile PHP WURFL Cloud Client",
+	"authors": [{
+			"name": "Steve Kamerman",
+			"email": "steve@scientiamobile.com"
+		}
+	],
+	"require": {
+        "php": ">=5.4.0"
+	},
+	"require-dev": {
+		"guzzle/guzzle": "~3.7@dev",
+		"phpunit/phpunit": "3.7.*"
+	},
+	"autoload": {
+		"psr-0": {
+			"ScientiaMobile\\WurflCloud": "src"
+		}
+	}
+}

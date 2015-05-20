@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="tests/bootstrap.php">
+	<testsuites>
+		<testsuite name="WURFL CLoud Test Suite">
+			<directory>tests/ScientiaMobile/WurflCloud/</directory>
+		</testsuite>
+	</testsuites>
+	<php>
+		<!-- Put your API key here to run the full test suite -->
+		<!-- <const name="WURFL_CLOUD_API_KEY" value="999999:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"/> -->
+	</php>
+</phpunit>
