@@ -1,5 +1,8 @@
 # Change log
 
+[2015-06-15] v2.0.3
+ - Enhancement: Reduce PHP version constraint from 5.4 to 5.3.
+
 [2015-05-20] v2.0.2
  - Enhancement: Open source cloud client.
 
