@@ -14,7 +14,7 @@ http://www.scientiamobile.com/cloud
 --------------
 ### Requirements
 
- - `PHP 5.4+`
+ - `PHP 5.3+` (Some HTTP adapters may require 5.4+)
  - `json` extension (almost always included)
  - `curl` extension is recommended
 
