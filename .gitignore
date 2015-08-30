@@ -1,4 +1,5 @@
 .DS_Store
 Thumbs.db
+/composer.lock
 /phpunit.xml
 /vendor
