@@ -21,8 +21,7 @@ http://www.scientiamobile.com/cloud
 ### Sign up for WURFL Cloud
 First, you must go to http://www.scientiamobile.com/cloud and signup
 for a free or paid WURFL Cloud account (see above).  When you've finished
-creating your account, and have selected the WURFL Capabilities that you
-would like to use, you must copy your API Key, as it will be needed in
+creating your account, you must copy your API Key, as it will be needed in
 the Client.
 
 ### Via Composer
