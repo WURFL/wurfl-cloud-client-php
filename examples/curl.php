@@ -12,7 +12,7 @@ try {
     $config = new Config();
 
     // Set your API Key here
-    $config->api_key = '861359:K0P1rBDX8yfk9gAvtSlsOCIUmTL5uwQJ';
+    $config->api_key = '123456:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
 
     // Create an HTTP Client
     $http_client = new Curl();

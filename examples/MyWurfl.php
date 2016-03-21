@@ -4,7 +4,7 @@ use ScientiaMobile\WurflCloud\Cache\APC;
 use ScientiaMobile\WurflCloud\Cache\Memcache;
 use ScientiaMobile\WurflCloud\Cache\Memcached;
 use ScientiaMobile\WurflCloud\Cache\File;
-use ScientiaMobile\WurflCloud\Cache\Null;
+use ScientiaMobile\WurflCloud\Cache\NullCache;
 use ScientiaMobile\WurflCloud\Cache\Cookie;
 use ScientiaMobile\WurflCloud\Client;
 /**
@@ -31,45 +31,45 @@ use ScientiaMobile\WurflCloud\Client;
  * @subpackage Example
  */
 class MyWurfl {
-	/**
-	 * Enter your API Key here
-	 * @var string
-	 */
-	private static $api_key = '123456:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
-	/**
-	 * Initialize static instance
-	 */
-	private static function init() {
-		require_once __DIR__.'/../src/autoload.php';
-		// Additional configuration options can be used here
-		$config = new Config();
-		$config->api_key = self::$api_key;
-		
-		// Set the cache that you'd like to use.  Here are some options:
-		$cache = new Cookie();
-		//$cache = new APC();
-		//$cache = new Memcache();
-		//$cache = new Memcached();
-		//$cache = new File();
-		
-		// These two lines setup the Client and do the device detection
-		self::$instance = new Client($config, $cache);
-		self::$instance->detectDevice();
-	}
-	/**
-	 * Returns the value of the requested capability
-	 * @param string $capability_name
-	 * @return mixed Value of the requested capability
-	 */
-	public static function get($capability_name) {
-		if (self::$instance === null) self::init();
-		return self::$instance->getDeviceCapability($capability_name);
-	}
-	public static function getInstance() {
-		return self::$instance;
-	}
-	/**
-	 * @var WurflCloud_Client_Client
-	 */
-	private static $instance;	
+    /**
+     * @var WurflCloud_Client_Client
+     */
+    private static $instance;
+    /**
+     * Enter your API Key here
+     * @var string
+     */
+    private static $api_key = '123456:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
+    /**
+     * Initialize static instance
+     */
+    private static function init() {
+        require_once __DIR__.'/../src/autoload.php';
+        // Additional configuration options can be used here
+        $config = new Config();
+        $config->api_key = self::$api_key;
+        
+        // Set the cache that you'd like to use.  Here are some options:
+        $cache = new Cookie();
+        //$cache = new APC();
+        //$cache = new Memcache();
+        //$cache = new Memcached();
+        //$cache = new File();
+        
+        // These two lines setup the Client and do the device detection
+        self::$instance = new Client($config, $cache);
+        self::$instance->detectDevice();
+    }
+    /**
+     * Returns the value of the requested capability
+     * @param string $capability_name
+     * @return mixed Value of the requested capability
+     */
+    public static function get($capability_name) {
+        if (self::$instance === null) self::init();
+        return self::$instance->getDeviceCapability($capability_name);
+    }
+    public static function getInstance() {
+        return self::$instance;
+    }
 }

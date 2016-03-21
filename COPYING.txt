@@ -4,13 +4,13 @@ the WURFL Cloud Client is dual-licensed. You may choose to use the WURFL
 Cloud Client under either the GNU GENERAL PUBLIC LICENSE, Version 2.0, or
 the MIT License.
 
-Copyright (c) 2015 ScientiaMobile, Inc. <support at scientiamobile dot com>
+Copyright (c) 2016 ScientiaMobile, Inc. <support at scientiamobile dot com>
 
 -----
 
 The MIT License (MIT)
 
-Copyright (c) 2015 ScientiaMobile, Inc.
+Copyright (c) 2016 ScientiaMobile, Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

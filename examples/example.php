@@ -21,14 +21,14 @@
 require_once __DIR__.'/MyWurfl.php';
 
 try {
-	// Check if the device is mobile
-	if (MyWurfl::get('ux_full_desktop')) {
-		echo "This is a desktop browser <br/>\n";
-	} else {
-		echo "This is a mobile device. <br/>\n";
-		// If you don't have 'brand_name' and 'model_name', you can comment out this line to run the example
-		echo 'Device: '.MyWurfl::get('brand_name').' '.MyWurfl::get('model_name')." <br/>\n";
-	}
+    // Check if the device is mobile
+    if (MyWurfl::get('ux_full_desktop')) {
+        echo "This is a desktop browser <br/>\n";
+    } else {
+        echo "This is a mobile device. <br/>\n";
+        // If you don't have 'brand_name' and 'model_name', you can comment out this line to run the example
+        echo 'Device: '.MyWurfl::get('brand_name').' '.MyWurfl::get('model_name')." <br/>\n";
+    }
 } catch(Exception $e) {
-	echo 'Error: '.$e->getMessage();
+    echo 'Error: '.$e->getMessage();
 }
