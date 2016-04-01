@@ -117,16 +117,10 @@ Used for setting the WURFL Cloud API Key `api_key` and adding
 `addCloudServer()` / removing `clearServers()` WURFL Cloud Servers.
 
 ### Cache (optional)
-Standard caching classes:
+Caching classes:
 
  - `ScientiaMobile\WurflCloud\Cache\Null`: Disables caching completely
  - `ScientiaMobile\WurflCloud\Cache\Cookie`: Cookie-based caching
-
-**Premium WURFL Cloud accounts** have access to additional, high-performance
-caching layers.  Note that these files are only included in the WURFL Cloud
-Client package downloaded from a Premium account.  Please refer to the
-included examples for specific cache adapter configuration.
-
  - `ScientiaMobile\WurflCloud\Cache\File`: Filesystem-based caching
  - `ScientiaMobile\WurflCloud\Cache\APC`: APC memory-based caching
  - `ScientiaMobile\WurflCloud\Cache\Memcache`: Memcached distributed memory-based
