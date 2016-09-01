@@ -130,6 +130,7 @@ Caching classes:
 
 ### HttpClient  (optional)
  - `ScientiaMobile\WurflCloud\HttpClient\Fsock`: Uses native PHP `fsock` calls
+ - `ScientiaMobile\WurflCloud\HttpClient\FileGetContents`: Uses native PHP `file_get_contents` calls
  - `ScientiaMobile\WurflCloud\HttpClient\Curl`: Uses the PHP extension `curl`
  - `ScientiaMobile\WurflCloud\HttpClient\Guzzle`: Uses the [Guzzle HTTP client](http://guzzlephp.org/)
 
@@ -142,7 +143,7 @@ Then make sure to use the composer autoloader `vendor/autoload.php` instead of t
 built in one (`src/sutoload.php`).
 
 #### Proxy Server Configuration
-The `Curl` and `Guzzle` HTTP Clients support a proxy server configuration via the
+The `FileGetContents`, `Curl` and `Guzzle` HTTP Clients support a proxy server configuration via the
 `setProxy()` method:
 
 ```php
@@ -202,7 +203,14 @@ tests, run `phpunit` from the root directory (where `phpunit.xml.dist`
 is located):
 
     export WURFL_CLOUD_API_KEY="123456:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-    php vendor/phpunit/phpunit/phpunit.php -v
+    php vendor/bin/phpunit -v
+
+You can also use the Docker image included in `tests/docker` to run the
+test suite as follows:
+
+    cd tests/docker
+    export WURFL_CLOUD_API_KEY="123456:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    docker-compose up
 
 Note that in order to get all the tests to pass, you will need to use
 the API Key from a Premium WURFL Cloud account with all capabilities
