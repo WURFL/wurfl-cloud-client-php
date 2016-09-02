@@ -1,9 +1,9 @@
 <?php
 namespace ScientiaMobile\WurflCloud\HttpClient;
 use ScientiaMobile\WurflCloud\Config;
-use Guzzle\Http\Exception\BadResponseException;
-use Guzzle\Http\Message\Response;
-use Guzzle\Http\Client as GuzzleClient;
+
+use GuzzleHttp\Exception\BadResponseException;
+use GuzzleHttp\Psr7\Response;
 /**
  * Copyright (c) 2015 ScientiaMobile, Inc.
  *
@@ -13,11 +13,8 @@ use Guzzle\Http\Client as GuzzleClient;
  * @subpackage HttpClient
  */
 /**
- * An HTTP Client that wraps the Guzzle HTTP client
- *
- * @deprecated
- * WARNING: this adapter only supports the old Guzzle client, up to version 3.9!
- * For the latest version of guzzle, use the GuzzleHttp client. 
+ * An HTTP Client that wraps the GuzzleHttp/Guzzle HTTP client.
+ * Note that this differs from the Guzzle client in that it supports Guzzle 6+
  * 
  * You can re-use an existing Guzzle object like this:
  * 
@@ -31,34 +28,33 @@ use Guzzle\Http\Client as GuzzleClient;
  * $client = new ScientiaMobile\WurflCloud\Client($config, $cache, $guzzle_wrapper); 
  * 
  */
-class Guzzle extends AbstractHttpClient {
+class GuzzleHttp extends AbstractHttpClient {
 	
 	/**
-	 * @var \Guzzle\Http\Client
+	 * @var \GuzzleHttp\Client
 	 */
 	private $guzzle;
 	
 	/**
 	 * Create a Guzzle-wrapping HTTP Client for WURFL Cloud
-	 * @param \Guzzle\Http\Client|null $guzzle
+	 * @param \GuzzleHttp\Client|null $guzzle
 	 */
 	public function __construct($guzzle=null) {
 		if ($guzzle) {
 			$this->guzzle = $guzzle;
 		} else {
-			$this->guzzle = new GuzzleClient();
+			$this->guzzle = new \GuzzleHttp\Client();
 		}
 	}
 	
 	/**
-	 * Returns the response body using the Guzzle package
+	 * Returns the response body using the GuzzleHttp/Guzzle package
 	 * @param Config $config
 	 * @param string $request_path Request Path/URI
 	 * @throws HttpException Unable to query server
 	 */
 	public function call(Config $config, $request_path) {
-		// Setup
-		$this->guzzle->setBaseUrl('http://'.$config->getCloudHost());
+		$url = 'http://'.$config->getCloudHost().$request_path;
 		
 		$http_headers = $this->request_headers;
 		$http_headers["Accept"] = "*/*";
@@ -74,26 +70,44 @@ class Guzzle extends AbstractHttpClient {
 			'timeout' => ($this->timeout_ms / 1000),
 			'connect_timeout' => ($this->timeout_ms / 1000),
 			'proxy' => $this->proxy,
+			'headers' => $http_headers,
+			'version' => 1.0,
 		);
 		
 		// Execute
 		try {
-			$request = $this->guzzle->get($request_path, $http_headers, $options);
-			$response = $request->send();
+			$response = $this->guzzle->get($url, $options);
 			
 		} catch (BadResponseException $e) {
 			return $this->processGuzzleResponse($e->getResponse());
 			
 		} catch (\Exception $e) {
 			throw new HttpException("Unable to contact server: Guzzle Error: ".$e->getMessage(), null, $e);
-			
 		}
 		
 		return $this->processGuzzleResponse($response);
 	}
 	
 	protected function processGuzzleResponse(Response $response) {
-		$this->processResponseHeaders($response->getRawHeaders());
-		$this->processResponseBody($response->getBody(true));
+		// Rebuild status line
+		$status_line = sprintf("HTTP/%s %s %s",
+			$response->getProtocolVersion(),
+			$response->getStatusCode(),
+			$response->getReasonPhrase()
+		);
+
+		// Add status to headers
+		$headers = [$status_line];
+
+		// Add other headers in normal format
+		foreach ($response->getHeaders() as $header => $value) {
+			if (is_array($value)) {
+				$value = implode(',', $value);
+			}
+			$headers[] = "$header: $value";
+		}
+
+		$this->processResponseHeaders(implode("\r\n", $headers));
+		$this->processResponseBody((string)$response->getBody());
 	}
 }

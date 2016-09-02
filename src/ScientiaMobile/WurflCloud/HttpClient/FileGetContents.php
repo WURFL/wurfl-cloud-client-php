@@ -86,10 +86,7 @@ class FileGetContents extends Fsock {
 			$context_options['http']['proxy'] = $this->proxy;
 		}
 
-		// Merge in the overridden stream options, if any
-		$combined_options = array_replace_recursive($context_options, $this->stream_options);
-
-		$context = stream_context_create($combined_options);
+		$context = stream_context_create($context_options);
 
 		if (function_exists('error_clear_last')) {
 			// In PHP 7+ we can clear all previous errors so we're sure we capture the correct one

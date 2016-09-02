@@ -79,7 +79,7 @@ abstract class HttpClientTestCase extends \PHPUnit_Framework_TestCase {
 	 * @expectedExceptionMessage No API key was provided
 	 */
 	public function testCallMangledApiKey() {
-		$this->config->api_key = 'foobar';
+		$this->config->api_key = 'foo:bar';
 		$this->http_client->call($this->config, $this->request_path);
 	}
 	

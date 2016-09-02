@@ -38,12 +38,20 @@ class Curl extends AbstractHttpClient {
 	 * @throws HttpException Unable to query server
 	 */
 	public function call(Config $config, $request_path) {
+		$http_headers = $this->getCurlHeaders();
+
+		// Compression
+		if ($this->use_compression === true && $this->curl_supports_encoding === true) {
+			$this->option(CURLOPT_ENCODING, '');
+			$http_headers[] = "Accept-Encoding: gzip";
+		}
+
 		// Setup CURL
 		$this->option(CURLOPT_URL, 'http://'.$config->getCloudHost().$request_path);
 		$this->option(CURLOPT_RETURNTRANSFER, true);
 		$this->option(CURLOPT_FORBID_REUSE, true);
 		$this->option(CURLOPT_HEADER, true);
-		$this->option(CURLOPT_HTTPHEADER, $this->getCurlHeaders());
+		$this->option(CURLOPT_HTTPHEADER, $http_headers);
 		$this->option(CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 		$this->option(CURLOPT_USERPWD, $config->api_key);
 		
@@ -51,12 +59,7 @@ class Curl extends AbstractHttpClient {
 		if ($this->proxy) {
 			$this->option(CURLOPT_PROXY, $this->proxy);
 		}
-		
-		// Compression
-		if ($this->use_compression === true && $this->curl_supports_encoding === true) {
-			$this->option(CURLOPT_ENCODING, '');
-		}
-		
+				
 		// Timeout
 		if ($this->curl_supports_ms) {
 			// Required for CURLOPT_TIMEOUT_MS to play nice on most Unix/Linux systems
@@ -93,7 +96,9 @@ class Curl extends AbstractHttpClient {
 	 * @return array
 	 */
 	private function getCurlHeaders() {
-		$headers = array();
+		$headers = array(
+			"Accept: */*",
+		);
 		foreach ($this->request_headers as $key => $value) {
 			$headers[] = "$key: $value";
 		}

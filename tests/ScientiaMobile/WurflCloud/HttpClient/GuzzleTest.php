@@ -8,9 +8,4 @@ class GuzzleTest extends HttpClientTestCase {
 		$this->http_client = new Guzzle();
 		parent::setUp();
 	}
-	
-	public function testCallTimeout() {
-		// Guzzle doesn't seem to honor timeouts consistently
-		// $this->markTestSkipped("Guzzle doesn't seem to honor timeouts consistently");
-	}
 }

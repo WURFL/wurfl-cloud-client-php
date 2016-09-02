@@ -58,7 +58,7 @@ class Fsock extends AbstractHttpClient {
 		}
 		$http_header.= "Connection: Close\r\n";
 		$http_header.= "\r\n";
-//die('<pre>'.nl2br($http_header).'</pre>');
+
 		// Setup timeout
 		stream_set_timeout($fh, 0, $this->timeout_ms * 1000);
 		
