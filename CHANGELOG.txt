@@ -1,5 +1,12 @@
 # Change log
 
+[2016-09-02] v2.0.4
+ - Enhancement: Added support for Google App Engine and documentation for using Cloud Storage for caching.
+ - Enhancement: Added `HttpClient\FileGetContents` for use without `curl` or `fsock`.
+ - Enhancement: Added support for Guzzle 6+ through new adapter `HttpClient\GuzzleHttp`.
+ - Enhancement: Added Docker test runner via `docker-compose`.
+ - Bugfix: CURL adapter would not use compression even with `use_compression = true`.
+
 [2015-06-15] v2.0.3
  - Enhancement: Reduce PHP version constraint from 5.4 to 5.3.
 
@@ -21,16 +28,12 @@
  - Improved documentation
 
 [2012-04-02] v1.0.2
-
  - Bugfix: Strict notices about abstract static methods
  - Improved code examples
  - Bugfix: Memcache connections are duplicated
 
 [2012-03-16] v1.0.1
-
  - Bugfix: JSON warnings in PHP < 5.3
 
 [2011-12-21] v1.0.0
-
  - Initial release
- 
