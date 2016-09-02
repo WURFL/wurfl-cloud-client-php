@@ -15,20 +15,19 @@ use ScientiaMobile\WurflCloud\Exception;
  */
 class FileGetContents extends Fsock {
 
+	protected $stream_options = array();
+
 	/**
 	 * Use a proxy to access the WURFL Cloud service
 	 * Proxy URL should be in the format:
 	 *   protocol://[user:pass@]ip_or_hostname:port
 	 * Ex:
-	 *   http://192.168.1.10:8080
-	 *   socks4://192.168.1.10:8080
-	 *   socks4a://192.168.1.10:8080
-	 *   socks5://myuser:mypass@192.168.1.10:8080
+	 *   tcp://proxy.example.com:5100
 	 *   
-	 * This option gets passed straight to CURL and whether or not it works
-	 * for you depends on your version of PHP/CURL.
+	 * This option gets passed straight to stream_context_create() and whether or not it works
+	 * for you depends on your version of PHP and your proxy server.
 	 * 
-	 * @see http://curl.haxx.se/libcurl/c/curl_easy_setopt.html#CURLOPTPROXY
+	 * @see http://php.net/manual/en/context.http.php#context.http.proxy
 	 * 
 	 * @param string $proxy URL of proxy server
 	 */
@@ -37,7 +36,21 @@ class FileGetContents extends Fsock {
 	}
 
 	/**
-	 * Returns the response body using the PHP cURL Extension
+	 * Manually set stream options that will be used in stream_context_create().
+	 * The options provided here are set last, so they will overwrite any existing options set
+	 * by the WURFL Cloud Client.
+	 * 
+	 * Ex:
+	 *   setStreamOptions([ 'http' => ['request_fulluri' => true] ])
+	 * 
+	 * @param array $options The stream options
+	 */
+	public function setStreamOptions(array $options) {
+		$this->stream_options = $options;
+	}
+
+	/**
+	 * Returns the response body using the PHP file_get_contents() command
 	 * @param Config $config
 	 * @param string $request_path Request Path/URI
 	 * @throws HttpException Unable to query server
@@ -73,7 +86,10 @@ class FileGetContents extends Fsock {
 			$context_options['http']['proxy'] = $this->proxy;
 		}
 
-		$context = stream_context_create($context_options);
+		// Merge in the overridden stream options, if any
+		$combined_options = array_replace_recursive($context_options, $this->stream_options);
+
+		$context = stream_context_create($combined_options);
 
 		if (function_exists('error_clear_last')) {
 			// In PHP 7+ we can clear all previous errors so we're sure we capture the correct one
