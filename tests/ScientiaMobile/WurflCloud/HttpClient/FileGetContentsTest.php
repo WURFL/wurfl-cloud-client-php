@@ -2,10 +2,11 @@
 
 namespace ScientiaMobile\WurflCloud\HttpClient;
 
-class GuzzleTest extends HttpClientTestCase {
+class FileGetContentsTest extends HttpClientTestCase {
 	
 	public function setUp() {
-		$this->http_client = new Guzzle();
+		$this->http_client = new FileGetContents();
 		parent::setUp();
 	}
+	
 }

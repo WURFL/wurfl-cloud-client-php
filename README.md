@@ -130,10 +130,12 @@ Caching classes:
 
 ### HttpClient  (optional)
  - `ScientiaMobile\WurflCloud\HttpClient\Fsock`: Uses native PHP `fsock` calls
+ - `ScientiaMobile\WurflCloud\HttpClient\FileGetContents`: Uses native PHP `file_get_contents` calls
  - `ScientiaMobile\WurflCloud\HttpClient\Curl`: Uses the PHP extension `curl`
- - `ScientiaMobile\WurflCloud\HttpClient\Guzzle`: Uses the [Guzzle HTTP client](http://guzzlephp.org/)
+ - `ScientiaMobile\WurflCloud\HttpClient\Guzzle`: Uses the [Guzzle HTTP client (version < 4)](http://guzzlephp.org/)
+  - `ScientiaMobile\WurflCloud\HttpClient\GuzzleHttp`: Uses the [Guzzle HTTP client (version 6+)](http://guzzlephp.org/)
 
-Note: to use `Guzzle`, you must have the Guzzle library loaded.  To load it locally,
+Note: to use `Guzzle` or `GuzzleHttp`, you must have the Guzzle library loaded.  To load it locally,
 you can run the following command from the root of the WURFL Cloud Client folder:
 
     composer update
@@ -142,7 +144,7 @@ Then make sure to use the composer autoloader `vendor/autoload.php` instead of t
 built in one (`src/sutoload.php`).
 
 #### Proxy Server Configuration
-The `Curl` and `Guzzle` HTTP Clients support a proxy server configuration via the
+The `FileGetContents`, `Curl`, `Guzzle` and `GuzzleHttp` HTTP Clients support a proxy server configuration via the
 `setProxy()` method:
 
 ```php
@@ -187,6 +189,56 @@ $http_client->setTimeout(10000);
 $client = new ScientiaMobile\WurflCloud\Client($config, $cache, $http_client);
 ```
 
+### Google App Engine
+-----------------------------------------------------
+In order to use the WURFL Cloud Client in a Google App Engine PHP application, you may need to make some changes to the default configuration.
+
+First, you should use the `FileGetContents` HTTP Client since `curl` and `fsock` are not supported by default.
+
+```php
+$http_client = new ScientiaMobile\WurflCloud\HttpClient\FileGetContents();
+```
+
+Next, you should use either `Memcache` or `File` for caching:
+
+Memcache:
+```php
+$cache = new ScientiaMobile\WurflCloud\Cache\Memcache();
+```
+
+File:
+```php
+$cache = new ScientiaMobile\WurflCloud\Cache\File();
+
+// Disable UNIX hard links since they aren't supported in Google App Engine
+$cache->use_links = false;
+
+// Update this to point to your Google Cloud Storage bucket
+$cache->cache_dir = "gs://bucket_name/";
+```
+
+Putting this all together, the following is a fully functional Google App Engine config (using `Memcache`):
+
+```php
+// Create a configuration object
+$config = new ScientiaMobile\WurflCloud\Config();
+
+// Set your WURFL Cloud API Key
+$config->api_key = 'xxxxxx:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
+
+// Create the cache adapter
+$cache = new ScientiaMobile\WurflCloud\Cache\Memcache();
+
+// Create the HttpClient adapter
+$http_client = new ScientiaMobile\WurflCloud\HttpClient\FileGetContents();
+
+// Create the WURFL Cloud Client
+$client = new ScientiaMobile\WurflCloud\Client($config, $cache, $http_client);
+
+// Detect device
+$client->detectDevice();
+```
+
 # Unit Testing
 Unit tests are included with the client and can be run with PHPUnit.
 Before you can run the unit tests, you must install the dependencies
@@ -202,7 +254,14 @@ tests, run `phpunit` from the root directory (where `phpunit.xml.dist`
 is located):
 
     export WURFL_CLOUD_API_KEY="123456:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-    php vendor/phpunit/phpunit/phpunit.php -v
+    php vendor/bin/phpunit -v
+
+You can also use the Docker image included in `tests/docker` to run the
+test suite as follows:
+
+    cd tests/docker
+    export WURFL_CLOUD_API_KEY="123456:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    docker-compose up
 
 Note that in order to get all the tests to pass, you will need to use
 the API Key from a Premium WURFL Cloud account with all capabilities

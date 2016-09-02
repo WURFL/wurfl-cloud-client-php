@@ -127,9 +127,13 @@ abstract class AbstractHttpClient {
 	protected function processResponseHeaders($headers) {
 		$this->response_headers = explode("\r\n", $headers);
 		$this->response_http_status = $this->response_headers[0];
+
 		list($protocol, $http_status_code, $reason_code) = explode(' ', $this->response_http_status, 3);
 		$http_status_code = (int)$http_status_code;
-		if ($http_status_code >= 400 ) {
+
+		$this->success = true;
+
+		if ($http_status_code >= 400) {
 			$this->success = false;
 			switch ($http_status_code) {
 				case 401:
@@ -146,7 +150,6 @@ abstract class AbstractHttpClient {
 					break;
 			}
 		}
-		$this->success = true;
 	}
 	
 	protected function processResponseBody($body) {

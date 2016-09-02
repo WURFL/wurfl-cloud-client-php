@@ -1,0 +1,6 @@
+php:
+    build: .
+    environment:
+        - WURFL_CLOUD_API_KEY=${WURFL_CLOUD_API_KEY}
+    volumes:
+        - ../../:/code

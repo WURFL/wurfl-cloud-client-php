@@ -13,7 +13,4 @@ class CurlTest extends HttpClientTestCase {
 		$this->http_client = new Curl();
 		parent::setUp();
 	}
-	
-	
-	
 }
