@@ -132,9 +132,10 @@ Caching classes:
  - `ScientiaMobile\WurflCloud\HttpClient\Fsock`: Uses native PHP `fsock` calls
  - `ScientiaMobile\WurflCloud\HttpClient\FileGetContents`: Uses native PHP `file_get_contents` calls
  - `ScientiaMobile\WurflCloud\HttpClient\Curl`: Uses the PHP extension `curl`
- - `ScientiaMobile\WurflCloud\HttpClient\Guzzle`: Uses the [Guzzle HTTP client](http://guzzlephp.org/)
+ - `ScientiaMobile\WurflCloud\HttpClient\Guzzle`: Uses the [Guzzle HTTP client (version < 4)](http://guzzlephp.org/)
+  - `ScientiaMobile\WurflCloud\HttpClient\GuzzleHttp`: Uses the [Guzzle HTTP client (version 6+)](http://guzzlephp.org/)
 
-Note: to use `Guzzle`, you must have the Guzzle library loaded.  To load it locally,
+Note: to use `Guzzle` or `GuzzleHttp`, you must have the Guzzle library loaded.  To load it locally,
 you can run the following command from the root of the WURFL Cloud Client folder:
 
     composer update
@@ -143,7 +144,7 @@ Then make sure to use the composer autoloader `vendor/autoload.php` instead of t
 built in one (`src/sutoload.php`).
 
 #### Proxy Server Configuration
-The `FileGetContents`, `Curl` and `Guzzle` HTTP Clients support a proxy server configuration via the
+The `FileGetContents`, `Curl`, `Guzzle` and `GuzzleHttp` HTTP Clients support a proxy server configuration via the
 `setProxy()` method:
 
 ```php
