@@ -51,17 +51,20 @@ class APC implements CacheInterface {
 	 * @access private
 	 */
 	protected $prefix = 'wc2_';
+	protected $apcu = false;
 
 	public function __construct() {
-		if (!function_exists('apc_store')) {
-			throw new Exception("The 'apc' extension is not loaded.");
+		if (!self::isSupported()) {
+			throw new Exception("Neither 'apc' nor 'apcu' PHP extension is loaded.");
 		}
+
+		$this->apcu = function_exists('apcu_store');
 	}
 
-	public function getDevice($user_agent){
-		$device_id = apc_fetch($this->prefix.hash('md5', $user_agent));
+	public function getDevice($user_agent) {
+		$device_id = $this->fetch($this->prefix.hash('md5', $user_agent));
 		if ($device_id !== false) {
-			$caps = apc_fetch($this->prefix.$device_id);
+			$caps = $this->fetch($this->prefix.$device_id);
 			if ($caps !== false) {
 				return $caps;
 			}
@@ -70,7 +73,7 @@ class APC implements CacheInterface {
 	}
 	
 	public function getDeviceFromID($device_id) {
-		$result = apc_fetch($this->prefix.$device_id);
+		$result = $this->fetch($this->prefix.$device_id);
 		return ($result === false)? false: $result;
 	}
 	
@@ -79,8 +82,8 @@ class APC implements CacheInterface {
 		if ($this->cache_expiration_rand_max !== 0) {
 			$ttl += mt_rand(0, $this->cache_expiration_rand_max);
 		}
-		apc_add($this->prefix.hash('md5', $user_agent), $capabilities['id'], $ttl);
-		apc_add($this->prefix.$capabilities['id'], $capabilities, $ttl);
+		$this->add($this->prefix.hash('md5', $user_agent), $capabilities['id'], $ttl);
+		$this->add($this->prefix.$capabilities['id'], $capabilities, $ttl);
 		return true;
 	}
 	
@@ -90,7 +93,7 @@ class APC implements CacheInterface {
 			$ttl += mt_rand(0, $this->cache_expiration_rand_max);
 		}
 
-		apc_add($this->prefix.$device_id, $capabilities, $ttl);
+		$this->add($this->prefix.$device_id, $capabilities, $ttl);
 		return true;
 	}
 	
@@ -103,4 +106,27 @@ class APC implements CacheInterface {
 	}
 	
 	public function close(){}
+
+	public function clear() {
+		return ($this->apcu)?
+			apcu_clear_cache():
+			apc_clear_cache();
+	}
+
+	protected function fetch($key) {
+		return ($this->apcu)?
+			apcu_fetch($key):
+			apc_fetch($key);
+	}
+
+	protected function add($key, $value, $ttl=null) {
+		return ($this->apcu)?
+			apcu_add($key, $value, $ttl):
+			apc_add($key, $value, $ttl);
+	}
+
+	public static function isSupported() {
+		return function_exists('apc_store') || function_exists('apcu_store');
+	}
+
 }

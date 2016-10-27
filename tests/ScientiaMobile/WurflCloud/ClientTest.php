@@ -3,7 +3,7 @@ namespace ScientiaMobile\WurflCloud;
 
 
 use ScientiaMobile\WurflCloud\Cache\CacheInterface;
-use ScientiaMobile\WurflCloud\Cache\Null;
+use ScientiaMobile\WurflCloud\Cache\NullCache;
 use ScientiaMobile\WurflCloud\HttpClient\Fsock;
 use ScientiaMobile\WurflCloud\HttpClient\HttpException;
 
@@ -38,7 +38,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase {
 		$this->config = new Config();
 
 		// Cache
-		$this->cache = new Null();
+		$this->cache = new NullCache();
 		
 		// HTTP Client
 		$this->http_client = new MockHttpClient();
@@ -96,7 +96,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase {
 				
 		// Reset everything
 		$this->config = new Config();
-		// Use MockCache instead of Null so we can force in a cache value
+		// Use MockCache instead of NullCache so we can force in a cache value
 		$this->cache = new MockCache();
 		$this->http_client = new MockHttpClient();
 		$this->client = new Client($this->config, $this->cache, $this->http_client);
@@ -161,7 +161,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase {
 	
 		// Reset everything
 		$this->config = new Config();
-		// Use MockCache instead of Null so we can force in a cache value
+		// Use MockCache instead of NullCache so we can force in a cache value
 		$this->cache = new MockCache();
 		$this->http_client = new MockHttpClient();
 		$this->client = new Client($this->config, $this->cache, $this->http_client);
@@ -297,7 +297,7 @@ class MockHttpClient extends Fsock {
 	}
 }
 
-class MockCache extends Null {
+class MockCache extends NullCache {
 	
 	public $misses = 0;
 	public $hits = 0;

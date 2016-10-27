@@ -4,17 +4,12 @@ namespace ScientiaMobile\WurflCloud\Cache;
 class APCTest extends CacheTestCase {
 	
 	public function setUp() {
-		if (!extension_loaded('apc')) {
-			$this->markTestSkipped("PHP extension 'apc' is not loaded");
+		if (!APC::isSupported()) {
+			$this->markTestSkipped("PHP extension 'apc' is not loaded or enabled (see apc.enable_cli)");
 		}
-		
-		if (@apc_cache_info() === false) {
-			$this->markTestSkipped("PHP extension 'apc' is loaded, but not enabled, see apc.enable_cli");
-		}
-		
+
 		$this->cache = new APC();
-		apc_clear_cache();
-		@apc_clear_cache("user");
+		$this->cache->clear();
 	}
 	
 	public function testCacheExpireIsHonored() {

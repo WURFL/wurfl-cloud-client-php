@@ -94,7 +94,7 @@ the following classes:
     require_once '../src/autoload.php';
     ScientiaMobile\WurflCloud\Config
     ScientiaMobile\WurflCloud\Client
-    ScientiaMobile\WurflCloud\Cache\Null
+    ScientiaMobile\WurflCloud\Cache\NullCache
     ScientiaMobile\WurflCloud\Cache\Cookie
 
 Every other class was also renamed/namespaced, so if you are using them
@@ -119,7 +119,7 @@ Used for setting the WURFL Cloud API Key `api_key` and adding
 ### Cache (optional)
 Caching classes:
 
- - `ScientiaMobile\WurflCloud\Cache\Null`: Disables caching completely
+ - `ScientiaMobile\WurflCloud\Cache\NullCache`: Disables caching completely
  - `ScientiaMobile\WurflCloud\Cache\Cookie`: Cookie-based caching
  - `ScientiaMobile\WurflCloud\Cache\File`: Filesystem-based caching
  - `ScientiaMobile\WurflCloud\Cache\APC`: APC memory-based caching

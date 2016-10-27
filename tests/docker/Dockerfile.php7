@@ -1,0 +1,24 @@
+FROM ubuntu:16.04
+
+ENV TERM xterm
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt-get update && apt-get install -y \
+        memcached \
+        php7.0-cli \
+        php7.0-curl \
+        php7.0-json \
+        php-xml \
+        php-apcu \
+        php-memcache \
+        php-memcached \
+    && echo "apc.enable_cli=1" >> /etc/php/7.0/mods-available/apcu.ini \
+    && phpenmod apcu memcache memcached \
+    && apt-get -qy autoremove \
+    && apt-get clean \
+    && rm -r /var/lib/apt/lists/*
+
+COPY docker-init.sh /
+VOLUME /code
+WORKDIR /code
+CMD ["/docker-init.sh"]

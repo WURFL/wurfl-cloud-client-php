@@ -9,12 +9,12 @@ namespace ScientiaMobile\WurflCloud\Cache;
  * @subpackage Cache
  */
 /**
- * The Null Cache Provider.  This exists only to disable caching and
+ * The NullCache Cache Provider.  This exists only to disable caching and
  * should not be used for production installations
  * @package ScientiaMobile\WurflCloud
  * @subpackage Cache
  */
-class Null implements CacheInterface {
+class NullCache implements CacheInterface {
 
 	public $cache_expiration = 0;
 	public $cache_expiration_rand_max = 0;

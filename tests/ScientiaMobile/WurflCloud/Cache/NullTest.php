@@ -4,7 +4,7 @@ namespace ScientiaMobile\WurflCloud\Cache;
 class NullTest extends CacheTestCase {
 	
 	public function setUp() {
-		$this->cache = new Null();
+		$this->cache = new NullCache();
 	}
 	
 	public function testGetSetDevice() {

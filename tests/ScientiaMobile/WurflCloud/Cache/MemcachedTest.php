@@ -16,7 +16,8 @@ class MemcachedTest extends CacheTestCase {
 		
 		$memcache = $this->cache->getMemcache();
 		$version = $memcache->getVersion();
-		$server_version = $version["{$host}:{$port}"];
+
+		$server_version = current($version);
 		
 		if ($server_version == '255.255.255') {
 			$this->markTestSkipped("Cannot connect to local memcached server");
