@@ -1,5 +1,10 @@
 # Change log
 
+[2016-10-27] v2.1.0
+ - Enhancement: Added full support for PHP 7
+ - Enhancement: Added support for APCu to the APC cache adapter
+ - Bugfix: Fsock adapter should use HTTP/1.0 to avoid chunked transfer encoding
+
 [2016-09-02] v2.0.4
  - Enhancement: Added support for Google App Engine and documentation for using Cloud Storage for caching.
  - Enhancement: Added `HttpClient\FileGetContents` for use without `curl` or `fsock`.

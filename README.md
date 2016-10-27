@@ -122,7 +122,7 @@ Caching classes:
  - `ScientiaMobile\WurflCloud\Cache\NullCache`: Disables caching completely
  - `ScientiaMobile\WurflCloud\Cache\Cookie`: Cookie-based caching
  - `ScientiaMobile\WurflCloud\Cache\File`: Filesystem-based caching
- - `ScientiaMobile\WurflCloud\Cache\APC`: APC memory-based caching
+ - `ScientiaMobile\WurflCloud\Cache\APC`: APC (or APCu) memory-based caching
  - `ScientiaMobile\WurflCloud\Cache\Memcache`: Memcached distributed memory-based
  caching using the PHP `memcache` extension
  - `ScientiaMobile\WurflCloud\Cache\Memcached`: Memcached distributed memory-based
