@@ -46,7 +46,7 @@ class Fsock extends AbstractHttpClient {
 		}
 		
 		// Setup HTTP Request headers
-		$http_header = "GET $request_path HTTP/1.1\r\n";
+		$http_header = "GET $request_path HTTP/1.0\r\n";
 		$http_header.= "Host: $host\r\n";
 		if ($this->use_compression === true) {
 			$http_header.= "Accept-Encoding: gzip\r\n";

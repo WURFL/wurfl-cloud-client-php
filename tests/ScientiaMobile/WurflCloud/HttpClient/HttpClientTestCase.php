@@ -76,7 +76,7 @@ abstract class HttpClientTestCase extends \PHPUnit_Framework_TestCase {
 
 	/**
 	 * @expectedException \ScientiaMobile\WurflCloud\ApiKeyException
-	 * @expectedExceptionMessage No API key was provided
+	 * @expectedExceptionMessage Invalid API key
 	 */
 	public function testCallMangledApiKey() {
 		$this->config->api_key = 'foo:bar';
@@ -159,7 +159,7 @@ abstract class HttpClientTestCase extends \PHPUnit_Framework_TestCase {
 		
 		$this->http_client->setTimeout($timeout);
 		$this->config->clearServers();
-		$this->config->addCloudServer('foo', 'node01-za.wurflcloud.com:12345');
+		$this->config->addCloudServer('foo', 'api.wurflcloud.com:12345');
 		
 		$start_time = microtime(true);
 		
