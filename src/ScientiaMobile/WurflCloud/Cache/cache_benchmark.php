@@ -11,10 +11,10 @@ use ScientiaMobile\WurflCloud\Cache\Memcache;
 use ScientiaMobile\WurflCloud\Cache\Memcached;
 use ScientiaMobile\WurflCloud\Cache\APC;
 use ScientiaMobile\WurflCloud\Cache\Cookie;
-use ScientiaMobile\WurflCloud\Cache\Null;
+use ScientiaMobile\WurflCloud\Cache\NullCache;
 
 // Setup your cache object here with the settings you want to test
-$cache = new Null();
+$cache = new NullCache();
 
 // Set this to the number of tests you want to run
 $max = 10000;

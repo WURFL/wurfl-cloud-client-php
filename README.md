@@ -287,7 +287,7 @@ so you may need to launch phpunit like this to force it on:
 
     php -d apc.enable_cli=1 vendor/phpunit/phpunit/phpunit.php -v
 
-**2015 ScientiaMobile Incorporated**
+**2016 ScientiaMobile Incorporated**
 
 **All Rights Reserved.**
 

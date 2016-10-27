@@ -1,7 +1,7 @@
 <?php
 use ScientiaMobile\WurflCloud\Client;
 use ScientiaMobile\WurflCloud\Config;
-use ScientiaMobile\WurflCloud\Cache\Null;
+use ScientiaMobile\WurflCloud\Cache\NullCache;
 use ScientiaMobile\WurflCloud\HttpClient\Fsock;
 use ScientiaMobile\WurflCloud\ApiKeyException;
 /**
@@ -117,7 +117,7 @@ if ($run_test) {
 		$config->api_key = $api_key;
 		
 		// Setup cache
-		$cache = new Null();
+		$cache = new NullCache();
 		
 		// Setup HTTP Client
 		$http_client = new Fsock();

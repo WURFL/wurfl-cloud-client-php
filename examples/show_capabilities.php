@@ -1,6 +1,6 @@
 <?php
 use ScientiaMobile\WurflCloud\Config;
-use ScientiaMobile\WurflCloud\Cache\Null;
+use ScientiaMobile\WurflCloud\Cache\NullCache;
 use ScientiaMobile\WurflCloud\Cache\Cookie;
 use ScientiaMobile\WurflCloud\Client;
 /**
@@ -26,7 +26,7 @@ try {
 	$config->api_key = 'xxxxxx:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
 	
 	// Create a WURFL Cloud Client
-	$client = new Client($config, new Null());
+	$client = new Client($config, new NullCache());
 	
 	// Detect the visitor's device
 	$client->detectDevice();

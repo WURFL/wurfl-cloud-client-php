@@ -3,7 +3,7 @@ namespace ScientiaMobile\WurflCloud\HttpClient;
 use ScientiaMobile\WurflCloud\Config;
 use ScientiaMobile\WurflCloud\ApiKeyException;
 /**
- * Copyright (c) 2015 ScientiaMobile, Inc.
+ * Copyright (c) 2016 ScientiaMobile, Inc.
  *
  * Please refer to the COPYING.txt file distributed with the software for licensing information.
  * 

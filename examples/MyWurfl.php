@@ -4,7 +4,7 @@ use ScientiaMobile\WurflCloud\Cache\APC;
 use ScientiaMobile\WurflCloud\Cache\Memcache;
 use ScientiaMobile\WurflCloud\Cache\Memcached;
 use ScientiaMobile\WurflCloud\Cache\File;
-use ScientiaMobile\WurflCloud\Cache\Null;
+use ScientiaMobile\WurflCloud\Cache\NullCache;
 use ScientiaMobile\WurflCloud\Cache\Cookie;
 use ScientiaMobile\WurflCloud\Client;
 /**
