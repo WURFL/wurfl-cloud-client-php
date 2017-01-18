@@ -5,7 +5,7 @@ use ScientiaMobile\WurflCloud\Exception;
  * Copyright (c) 2016 ScientiaMobile, Inc.
  *
  * Please refer to the COPYING.txt file distributed with the software for licensing information.
- * 
+ *
  * @package ScientiaMobile\WurflCloud
  * @subpackage Cache
  */
@@ -23,7 +23,7 @@ use ScientiaMobile\WurflCloud\Exception;
  * // Create Client
  * $client = new ScientiaMobile\WurflCloud\Client($config, $cache);
  * </code>
- * 
+ *
  * You can also specify the cache directory and cache expiration:
  * <code>
  * // Create Cache object
@@ -38,7 +38,7 @@ use ScientiaMobile\WurflCloud\Exception;
  * @subpackage Cache
  */
 class File implements CacheInterface {
-	
+
 	/**
 	 * The directory where the cache files will be stored.
 	 * This must be writable by the webserver!
@@ -46,7 +46,7 @@ class File implements CacheInterface {
 	 * @var string
 	 */
 	public $cache_dir;
-	
+
 	/**
 	 * Number of seconds to keep device cached in memory.  Default: 0 - forever.
 	 * Note: the device will eventually be pushed out of memory if the memcached
@@ -55,42 +55,42 @@ class File implements CacheInterface {
 	 * @var Int Seconds to cache the device in memory
 	 */
 	public $cache_expiration = 86400;
-	
+
 	/**
-	 * Used to add randomness to the cache expiration.  If this value is 0, no 
+	 * Used to add randomness to the cache expiration.  If this value is 0, no
 	 * randomness will be added, if it's above 0, a random value between 0..value
 	 * will be added to the cache_expiration to prevent massive simultaneous expiry
 	 * @var int
 	 */
 	public $cache_expiration_rand_max = 0;
-	
+
 	/**
 	 * If true, use filesystem hard links to increase cache performance.  By default
 	 * this is changed to false on Windows due to lack of support.  If you want to use it
 	 * on Windows, see Notes here: http://php.net/manual/en/function.link.php
 	 * @var boolean Whether to use hard links for caching
 	 */
-	public $use_links = true; 
-	
+	public $use_links = true;
+
 	/**
 	 * The number of characters of the hashed key to use for filename spreading
 	 * Do not change this unless you know what you're doing
 	 * @var integer
 	 */
 	const SPREAD_CHARS = 6;
-	
+
 	/**
 	 * The number of characters after which to create a new directory
 	 * Do not change this unless you know what you're doing
 	 * @var integer
 	 */
 	const SPREAD_DIVISOR = 2;
-	
+
 	/**
 	 * Directory for cached Devices
 	 */
 	const DIR_DEVICE = 'device';
-	
+
 	/**
 	 * Directory for cached User Agents
 	 */
@@ -99,7 +99,7 @@ class File implements CacheInterface {
 	public function __construct() {
 		// Use filesystem hard links by default if on Linux/UNIX/Mac
 		$this->use_links = (DIRECTORY_SEPARATOR === '/');
-		
+
 		// Default cache directory is ../data/
 		$this->cache_dir = __DIR__.'/../../../../cache/';
 	}
@@ -107,19 +107,19 @@ class File implements CacheInterface {
 	public function getDevice($user_agent){
 		return $this->getCacheData($this->getFilepath($user_agent, self::DIR_USERAGENT));
 	}
-	
+
 	public function getDeviceFromID($device_id) {
 		return $this->getCacheData($this->getFilepath($device_id, self::DIR_DEVICE));
 	}
-	
+
 	public function setDevice($user_agent, $capabilities){
 		return $this->setCacheData($this->getFilepath($user_agent, self::DIR_USERAGENT), $capabilities, self::DIR_USERAGENT);
 	}
-	
+
 	public function setDeviceFromID($device_id, $capabilities){
 		return $this->setCacheData($this->getFilepath($device_id, self::DIR_DEVICE), $capabilities, self::DIR_DEVICE);
 	}
-	
+
 	/**
 	 * Returns the unserialized contents of $file or false
 	 * @param string $file
@@ -130,22 +130,22 @@ class File implements CacheInterface {
 		if ($this->cache_expiration_rand_max !== 0) {
 			$ttl += mt_rand(0, $this->cache_expiration_rand_max);
 		}
-		
+
 		$mtime = @filemtime($file);
 		if ($mtime === false || (time() - $mtime) > $ttl) {
 			@unlink($file);
 			return false;
 		}
-		
+
 		$raw_data = @file_get_contents($file);
 		// File does not exist
 		if ($raw_data === false) {
 			return false;
 		}
-		
+
 		$data = @unserialize($raw_data);
 		$raw_data = null;
-		
+
 		// File contents cannot be unserialized
 		if ($data === false || !is_array($data)) {
 			@unlink($file);
@@ -153,7 +153,7 @@ class File implements CacheInterface {
 		}
 		return $data;
 	}
-	
+
 	/**
 	 * Saves the specified $data in the specified $file
 	 * @param string $file Full path and filename of cache file
@@ -164,7 +164,9 @@ class File implements CacheInterface {
 	protected function setCacheData($file, $data, $type) {
 		// We need to see if the directory exists and create it if not, so we'll just attempt
 		// to create the directory and assume it exists.
+		$old_umask = @umask(0);
 		@mkdir(dirname($file), 0777, true);
+		@umask($old_umask);
 		if ($this->use_links === false) {
 			// This will always be a user agent since caching raw devices is disabled
 			$ok = @file_put_contents($file, serialize($data));
@@ -178,7 +180,9 @@ class File implements CacheInterface {
 				return true;
 			} else {
 				// Save device first
+				$old_umask = @umask(0);
 				@mkdir(dirname($device_file), 0777, true);
+				@umask($old_umask);
 				$file_ok = @file_put_contents($device_file, serialize($data));
 				// Now create link from user_agent => device
 				$link_ok = @link($device_file, $file);
@@ -190,7 +194,7 @@ class File implements CacheInterface {
 			return (bool)$ok;
 		}
 	}
-	
+
 	/**
 	 * Get the complete path and filename of the requested key, including the cache_path
 	 * @param string $key
@@ -220,7 +224,7 @@ class File implements CacheInterface {
 		}
 		throw new Exception("Unable to locate System Temp directory");
 	}
-	
+
 	/**
 	 * Returns $path with one trailing directory separator
 	 * @param string $path
@@ -235,9 +239,9 @@ class File implements CacheInterface {
 			return $path.'/';
 		}
 	}
-	
+
 	public function setCachePrefix($prefix) {}
-	
+
 	public function setCacheExpiration($time) {
 		$this->cache_expiration = $time;
 	}
