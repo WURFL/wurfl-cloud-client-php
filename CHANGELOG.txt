@@ -1,5 +1,8 @@
 # Change log
 
+[2017-01-18] v2.1.1
+ - Bugfix: Non-default umasks no longer cause cache files to be written with wrong permissions
+
 [2016-10-27] v2.1.0
  - Enhancement: Added full support for PHP 7
  - Enhancement: Added support for APCu to the APC cache adapter
