@@ -4,10 +4,11 @@ use ScientiaMobile\WurflCloud\Config;
 use ScientiaMobile\WurflCloud\Cache\NullCache;
 use ScientiaMobile\WurflCloud\HttpClient\Fsock;
 use ScientiaMobile\WurflCloud\ApiKeyException;
+
 /**
  * This is a test script to ensure your API Key is working properly, and that
  * you are able to access the WURFL Cloud Service.
- * 
+ *
  * If you move this file, you will need to change this to the directory where the
  * WurflCloudCient.php file is located *including a trailing slash*
  * example:
@@ -21,57 +22,60 @@ use ScientiaMobile\WurflCloud\ApiKeyException;
 require_once __DIR__.'/../src/autoload.php';
 
 error_reporting(E_ERROR);
-function shutdown_handler() {
-	$error = error_get_last();
-	if ($error === null || $error['type'] & ~(E_ERROR | E_CORE_ERROR | E_COMPILE_ERROR | E_USER_ERROR)) return;
-	echo "The WURFL Cloud Test script was unable to run on your system<br/>\nError on line {$error['line']}: {$error['message']}<br/>\n";
-	echo "Please report this on the <a href=\"http://www.scientiamobile.com/forum\">ScientiaMobile Forums</a><br/>\n";
+function shutdown_handler()
+{
+    $error = error_get_last();
+    if ($error === null || $error['type'] & ~(E_ERROR | E_CORE_ERROR | E_COMPILE_ERROR | E_USER_ERROR)) {
+        return;
+    }
+    echo "The WURFL Cloud Test script was unable to run on your system<br/>\nError on line {$error['line']}: {$error['message']}<br/>\n";
+    echo "Please report this on the <a href=\"http://www.scientiamobile.com/forum\">ScientiaMobile Forums</a><br/>\n";
 }
 
 if (function_exists('error_get_last')) {
-	register_shutdown_function('shutdown_handler');
+    register_shutdown_function('shutdown_handler');
 }
 
 $api_key = (isset($_POST['api_key']))? $_POST['api_key']: 'xxxxxx:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
 
 // Text
 $text = array(
-	'php' => array(
-		'full' => 'Your version of PHP ('.PHP_VERSION.') is compatible with WURFL Cloud.',
-		'partial' => '',
-		'none' => 'WURFL Cloud requires at least PHP 5.3.0 and you are running '.PHP_VERSION.'.',
-	),
-	'cloud' => array(
-		'full' => 'Your server is able to access WURFL Cloud and your API Key was accepted.',
-		'partial' => 'Your server is able to access WURFL Cloud, but your API Key was not provided, so it could not be tested.',
-		'none' => 'Your server is not able to access WURFL Cloud.  It\'s possible that your DNS server is slow to respond.  Please refresh
+    'php' => array(
+        'full' => 'Your version of PHP ('.PHP_VERSION.') is compatible with WURFL Cloud.',
+        'partial' => '',
+        'none' => 'WURFL Cloud requires at least PHP 5.3.0 and you are running '.PHP_VERSION.'.',
+    ),
+    'cloud' => array(
+        'full' => 'Your server is able to access WURFL Cloud and your API Key was accepted.',
+        'partial' => 'Your server is able to access WURFL Cloud, but your API Key was not provided, so it could not be tested.',
+        'none' => 'Your server is not able to access WURFL Cloud.  It\'s possible that your DNS server is slow to respond.  Please refresh
 			this page to verify.',
-	),
-	'apc' => array(
-			'full' => 'You have full support for the <span class="icode">apc</span> extension and it is working properly.
+    ),
+    'apc' => array(
+            'full' => 'You have full support for the <span class="icode">apc</span> extension and it is working properly.
 		<br/>Your system performed cache writes at <span class="icode">%s</span> and reads at <span class="icode">%s</span>.',
-			'partial' => 'You have the APC extension installed, but it isn\'t working properly.',
-			'none' => 'You do not have the APC extension installed.',
-	),
-	'memcache' => array(
-			'full' => 'You have full support for the <span class="icode">%s</span> extension and it is working properly.
+            'partial' => 'You have the APC extension installed, but it isn\'t working properly.',
+            'none' => 'You do not have the APC extension installed.',
+    ),
+    'memcache' => array(
+            'full' => 'You have full support for the <span class="icode">%s</span> extension and it is working properly.
 		<br/>Your system performed cache writes at <span class="icode">%s</span> and reads at <span class="icode">%s</span>.',
-			'partial' => 'You have the <span class="icode">%s</span> extension installed, but there either there is no local Memcached server,
+            'partial' => 'You have the <span class="icode">%s</span> extension installed, but there either there is no local Memcached server,
 		or it is running on a non-standard port.  You may still be able to use Memcached for caching, but you
 		will need to configure the server using the <span class="icode">addServer()</span> method.',
-			'none' => 'You do not have either of the Memcached extensions installed.  There are two different Memcached
+            'none' => 'You do not have either of the Memcached extensions installed.  There are two different Memcached
 		extensions supported by WURFL Cloud: <span class="icode">memcache</span> and <span class="icode">memcached</span>.
 		Once you install one of these extensions and the Memcached server, you will be able to use it for WURFL Cloud.',
-	),
-	'file' => array(
-			'full' => 'You have full support for filesystem-based caching.  Cache files will be stored in: <span class="icode">%s</span>.
+    ),
+    'file' => array(
+            'full' => 'You have full support for filesystem-based caching.  Cache files will be stored in: <span class="icode">%s</span>.
 		<br/>Your system performed cache writes at <span class="icode">%s</span> and reads at <span class="icode">%s</span>.',
-			'partial' => 'The recommended cache directory <span class="icode">%s</span> is not writable by your webserver, however, the server\'s temporary
+            'partial' => 'The recommended cache directory <span class="icode">%s</span> is not writable by your webserver, however, the server\'s temporary
 		directory is: <span class="icode">%s</span>.  Using this directory for caching is not recommended, but it will work.  Please refer to the code
 		sample above to enable caching in the server\'s temp directory.',
-			'none' => 'Neither the recommended cache directory <span class="icode">%s</span>, nor the server\'s temporary directory are writable by your
+            'none' => 'Neither the recommended cache directory <span class="icode">%s</span>, nor the server\'s temporary directory are writable by your
 		webserver.  You must have a writable cache directory to use filesystem caching.',
-	),
+    ),
 );
 
 // Code Sample
@@ -99,81 +103,80 @@ if ($client->getDeviceCapability(\'is_wireless_device\')) {
 $php_class = version_compare(PHP_VERSION, Client::PHP_MIN_VERSION, '>=')? 'full': 'none';
 $run_test = true;
 if (!function_exists('json_decode')) {
-	$run_test = false;
-	$cloud_class = 'none';
-	$text['cloud']['none'] = 'You are unable to test the WURFL Cloud Service from this server because it lacks support for JSON.';
-	if ($php_class == 'full') {
-		$text['php']['partial'] = 'Your PHP version is OK, but you do not have support for JSON decoding.  You will need the "json" extension to use WURFL Cloud.';
-		$php_class = 'partial';
-	}
+    $run_test = false;
+    $cloud_class = 'none';
+    $text['cloud']['none'] = 'You are unable to test the WURFL Cloud Service from this server because it lacks support for JSON.';
+    if ($php_class == 'full') {
+        $text['php']['partial'] = 'Your PHP version is OK, but you do not have support for JSON decoding.  You will need the "json" extension to use WURFL Cloud.';
+        $php_class = 'partial';
+    }
 }
 
 if ($run_test) {
-	// Test WURFL Cloud
-	$cloud_class = 'none';
-	try {
-		// Setup config
-		$config = new Config();
-		$config->api_key = $api_key;
-		
-		// Setup cache
-		$cache = new NullCache();
-		
-		// Setup HTTP Client
-		$http_client = new Fsock();
-		$http_client->setTimeout(5*1000);
-		
-		// Setup Cloud Client
-		$client = new Client($config, $cache);
-		
-		// Run detection
-		$client->detectDevice();
-		
-		$cloud_class = 'full';
-		
-	} catch (ApiKeyException $e) {
-		switch ($e->getCode()) {
-			default:
-			case 401 :
-				$text['cloud'][$cloud_class] = 'Your server is able to access WURFL Cloud, but your API Key was rejected.
+    // Test WURFL Cloud
+    $cloud_class = 'none';
+    try {
+        // Setup config
+        $config = new Config();
+        $config->api_key = $api_key;
+        
+        // Setup cache
+        $cache = new NullCache();
+        
+        // Setup HTTP Client
+        $http_client = new Fsock();
+        $http_client->setTimeout(5*1000);
+        
+        // Setup Cloud Client
+        $client = new Client($config, $cache);
+        
+        // Run detection
+        $client->detectDevice();
+        
+        $cloud_class = 'full';
+    } catch (ApiKeyException $e) {
+        switch ($e->getCode()) {
+            default:
+            case 401:
+                $text['cloud'][$cloud_class] = 'Your server is able to access WURFL Cloud, but your API Key was rejected.
 					Please verify your key and try again.';
-				break;
-			case 402 :
-				$cloud_class = 'partial';
-				$text['cloud'][$cloud_class] = 'Your server is able to access WURFL Cloud, but your API Key was not provided 
+                break;
+            case 402:
+                $cloud_class = 'partial';
+                $text['cloud'][$cloud_class] = 'Your server is able to access WURFL Cloud, but your API Key was not provided 
 					so it could not be tested.';
-				break;
-			case 403 :
-				$text['cloud'][$cloud_class] = get_class($e).': Your server is able to access WURFL Cloud and your API Key is correct,
+                break;
+            case 403:
+                $text['cloud'][$cloud_class] = get_class($e).': Your server is able to access WURFL Cloud and your API Key is correct,
 					but it is expired or has been revoked.  Please contact <a href="http://www.scientiamobile.com/" target="_blank">ScientiaMobile</a>
 					to get your API Key reinstated.  Possible causes for this error: Your WURFL Cloud account is past due; Your API Key
 					has been revoked due to abuse';
-				break;
-		}
-	} catch (Exception $e) {
-		// Other exception
-		$cloud_class = 'none';
-		$text['cloud'][$cloud_class] = 'The WURFL Cloud Client threw an unexpected '.get_class($e).': '.$e->getMessage();
-	}
+                break;
+        }
+    } catch (Exception $e) {
+        // Other exception
+        $cloud_class = 'none';
+        $text['cloud'][$cloud_class] = 'The WURFL Cloud Client threw an unexpected '.get_class($e).': '.$e->getMessage();
+    }
 }
 
 // Test APC
 $apc_class = 'none';
 $apc_code_sample = sprintf($code_sample, '$cache = new ScientiaMobile\\WurflCloud\\Cache\\APC();');
 if (function_exists('apc_store')) {
-	try {
-		$cache = new ScientiaMobile\WurflCloud\Cache\APC();
-		$cache->cache_expiration = 10;
-		$results = testCache($cache);
-		if ($results['error'] > 0) {
-			throw new ScientiaMobile\WurflCloud\Exception("Although APC is not reporting any errors, some of the cache tests failed.");
-		}
-		$apc_class = 'full';
-		$text['apc'][$apc_class] = sprintf($text['apc'][$apc_class], $results['write_avg'], $results['read_avg']);
-	} catch(Exception $e) {
-		$apc_class = 'partial';
-		$text['apc']['partial'] .= " The following exception was thrown during testing: ".$e->getMessage();
-	}
+    try {
+        $cache = new ScientiaMobile\WurflCloud\Cache\APC();
+        $cache->cache_expiration = 10;
+        $results = testCache($cache);
+        if ($results['error'] > 0) {
+            throw new ScientiaMobile\WurflCloud\Exception("Although APC is not reporting any errors, some of the cache tests failed.");
+        }
+        $apc_class = 'full';
+        $text['apc'][$apc_class] = sprintf($text['apc'][$apc_class], $results['write_avg'], $results['read_avg']);
+    } catch (Exception $e) {
+        $apc_class = 'partial';
+        $text['apc']['partial'] .= " The following exception was thrown during testing: ".$e->getMessage();
+    }
 }
 $cache = null;
 
@@ -184,145 +187,148 @@ $memcached = class_exists('Memcached');
 $memcache_class_name = ($memcache)? 'Memcache' : 'Memcached';
 $memcache_code_sample = sprintf($code_sample, "\$cache = new ScientiaMobile\\WurflCloud\\Cache\\$memcache_class_name();\n\$cache->addServer('127.0.0.1');");
 if ($memcache || $memcached) {
-	try {
-		if ($memcache) {
-			$cache = new ScientiaMobile\WurflCloud\Cache\Memcache();
-		} else {
-			$cache = new ScientiaMobile\WurflCloud\Cache\Memcached();
-		}
-		@$cache->addServer('127.0.0.1');
-		$cache->cache_expiration = 10;
-		$results = testCache($cache);
-		if ($results['error'] > 0) {
-			throw new ScientiaMobile\WurflCloud\Exception("Although Memcache is not reporting any errors, some of the cache tests failed.");
-		}
-		$memcache_class = 'full';
-		$cache = null;
-		$text['memcache'][$memcache_class] = sprintf($text['memcache'][$memcache_class], $memcache? 'memcache': 'memcached', $results['write_avg'], $results['read_avg']);
-	} catch(Exception $e) {
-		$memcache_class = 'partial';
-		$text['memcache'][$memcache_class] = sprintf($text['memcache'][$memcache_class], $memcache? 'memcache': 'memcached');
-		$text['memcache'][$memcache_class] .= " The following exception was thrown during testing: ".$e->getMessage();
-	}
+    try {
+        if ($memcache) {
+            $cache = new ScientiaMobile\WurflCloud\Cache\Memcache();
+        } else {
+            $cache = new ScientiaMobile\WurflCloud\Cache\Memcached();
+        }
+        @$cache->addServer('127.0.0.1');
+        $cache->cache_expiration = 10;
+        $results = testCache($cache);
+        if ($results['error'] > 0) {
+            throw new ScientiaMobile\WurflCloud\Exception("Although Memcache is not reporting any errors, some of the cache tests failed.");
+        }
+        $memcache_class = 'full';
+        $cache = null;
+        $text['memcache'][$memcache_class] = sprintf($text['memcache'][$memcache_class], $memcache? 'memcache': 'memcached', $results['write_avg'], $results['read_avg']);
+    } catch (Exception $e) {
+        $memcache_class = 'partial';
+        $text['memcache'][$memcache_class] = sprintf($text['memcache'][$memcache_class], $memcache? 'memcache': 'memcached');
+        $text['memcache'][$memcache_class] .= " The following exception was thrown during testing: ".$e->getMessage();
+    }
 }
 
 // Test Filesystem Cache
 $file_class = 'none';
 $results = null;
 try {
-	$cache = new ScientiaMobile\WurflCloud\Cache\File();
-	// Try to make the cache dir in case it doesn't already exist
-	@mkdir($cache->cache_dir, null, true);
-	$cache_dir = realpath($cache->cache_dir);
-	if ($cache_dir !== false && is_writable($cache->cache_dir)) {
-		$file_class = 'full';
-		$results = testCache($cache);
-		if ($results['error'] > 0) {
-			$file_class = 'none';
-			$text['file'][$file_class] = sprintf($text['file'][$file_class], $cache_dir);
-			throw new ScientiaMobile\WurflCloud\Exception("Although the cache directory is writable, some of the cache tests failed.");
-		}
-		$text['file'][$file_class] = sprintf($text['file'][$file_class], $cache_dir, $results['write_avg'], $results['read_avg']);
-		$file_code_sample = sprintf($code_sample, '$cache = new ScientiaMobile\\WurflCloud\\Cache\\File();');
-	} else {
-		$tmp_dir = ScientiaMobile\WurflCloud\Cache\File::getSystemTempDir();
-		if ($tmp_dir !== null && is_writable($tmp_dir)) {
-			$file_class = 'partial';
-			$cache->cache_dir = $tmp_dir;
-			$results = testCache($cache);
-			if ($results['error'] > 0) {
-				$file_class = 'none';
-				$text['file'][$file_class] = sprintf($text['file'][$file_class], $cache->cache_dir);
-				throw new ScientiaMobile\WurflCloud\Exception("Although the temp cache directory is writable, some of the cache tests failed.");
-			}
-			$text['file'][$file_class] = sprintf($text['file'][$file_class], $cache_dir, $tmp_dir, $results['write_avg'], $results['read_avg']);
-			$file_code_sample = sprintf($code_sample, "\$cache = new ScientiaMobile\\WurflCloud\\Cache\\File();\n\$cache->cache_dir = ScientiaMobile\\WurflCloud\\Cache\\File::getSystemTempDir();");
-		} else {
-			$file_class = 'none';
-			$text['file'][$file_class] = sprintf($text['file'][$file_class], $cache_dir);
-		}
-		$user = function_exists('posix_getpwuid')? @posix_getpwuid(posix_geteuid()): null;
-		if (DIRECTORY_SEPARATOR == '/' && is_array($user) && isset($user['name'])) {
-			$text['file'][$file_class] .= "<br/><br/>You can fix this problem by changing the owner of this directory to <span class=\"icode\">{$user['name']}</span>:<br/>
+    $cache = new ScientiaMobile\WurflCloud\Cache\File();
+    // Try to make the cache dir in case it doesn't already exist
+    @mkdir($cache->cache_dir, null, true);
+    $cache_dir = realpath($cache->cache_dir);
+    if ($cache_dir !== false && is_writable($cache->cache_dir)) {
+        $file_class = 'full';
+        $results = testCache($cache);
+        if ($results['error'] > 0) {
+            $file_class = 'none';
+            $text['file'][$file_class] = sprintf($text['file'][$file_class], $cache_dir);
+            throw new ScientiaMobile\WurflCloud\Exception("Although the cache directory is writable, some of the cache tests failed.");
+        }
+        $text['file'][$file_class] = sprintf($text['file'][$file_class], $cache_dir, $results['write_avg'], $results['read_avg']);
+        $file_code_sample = sprintf($code_sample, '$cache = new ScientiaMobile\\WurflCloud\\Cache\\File();');
+    } else {
+        $tmp_dir = ScientiaMobile\WurflCloud\Cache\File::getSystemTempDir();
+        if ($tmp_dir !== null && is_writable($tmp_dir)) {
+            $file_class = 'partial';
+            $cache->cache_dir = $tmp_dir;
+            $results = testCache($cache);
+            if ($results['error'] > 0) {
+                $file_class = 'none';
+                $text['file'][$file_class] = sprintf($text['file'][$file_class], $cache->cache_dir);
+                throw new ScientiaMobile\WurflCloud\Exception("Although the temp cache directory is writable, some of the cache tests failed.");
+            }
+            $text['file'][$file_class] = sprintf($text['file'][$file_class], $cache_dir, $tmp_dir, $results['write_avg'], $results['read_avg']);
+            $file_code_sample = sprintf($code_sample, "\$cache = new ScientiaMobile\\WurflCloud\\Cache\\File();\n\$cache->cache_dir = ScientiaMobile\\WurflCloud\\Cache\\File::getSystemTempDir();");
+        } else {
+            $file_class = 'none';
+            $text['file'][$file_class] = sprintf($text['file'][$file_class], $cache_dir);
+        }
+        $user = function_exists('posix_getpwuid')? @posix_getpwuid(posix_geteuid()): null;
+        if (DIRECTORY_SEPARATOR == '/' && is_array($user) && isset($user['name'])) {
+            $text['file'][$file_class] .= "<br/><br/>You can fix this problem by changing the owner of this directory to <span class=\"icode\">{$user['name']}</span>:<br/>
 			<span class=\"icode\">chown -R {$user['name']} $cache_dir</span>";
-		}
-	}
-} catch(Exception $e) {
-$file_class = 'none';
-$text['file'][$file_class] = sprintf($text['file'][$file_class], '');
-$text['file'][$file_class] .= " The following exception was thrown during testing: ".$e->getMessage();
+        }
+    }
+} catch (Exception $e) {
+    $file_class = 'none';
+    $text['file'][$file_class] = sprintf($text['file'][$file_class], '');
+    $text['file'][$file_class] .= " The following exception was thrown during testing: ".$e->getMessage();
 }
 
 // Summarize Test Results
 $sum_results = array(
-	array(
-		'class_name' => 'APC',
-		'support' => $apc_class,
-		'code_sample' => $apc_code_sample,
-	),
-	array(
-		'class_name' => $memcache_class_name,
-		'support' => $memcache_class,
-		'code_sample' => $memcache_code_sample,
-	),
-	array(
-		'class_name' => 'File',
-		'support' => $file_class,
-		'code_sample' => $file_code_sample,
-	),
-	array(
-		'class_name' => 'No caching method available',
-		'support' => 'full',
-		'code_sample' => "None of the supported Cache methods are available.\nPlease correct at least one of the errors below."
-	),
+    array(
+        'class_name' => 'APC',
+        'support' => $apc_class,
+        'code_sample' => $apc_code_sample,
+    ),
+    array(
+        'class_name' => $memcache_class_name,
+        'support' => $memcache_class,
+        'code_sample' => $memcache_code_sample,
+    ),
+    array(
+        'class_name' => 'File',
+        'support' => $file_class,
+        'code_sample' => $file_code_sample,
+    ),
+    array(
+        'class_name' => 'No caching method available',
+        'support' => 'full',
+        'code_sample' => "None of the supported Cache methods are available.\nPlease correct at least one of the errors below."
+    ),
 );
 $recommended = null;
 for ($i=0; $i<count($sum_results); $i++) {
-	if ($sum_results[$i]['support'] == 'full') {
-		$recommended = $sum_results[$i];
-		break;
-	}
-	if ($sum_results[$i]['class_name'] == 'File' && $sum_results[$i]['support'] == 'partial') {
-		$recommended = $sum_results[$i];
-		break;
-	}
+    if ($sum_results[$i]['support'] == 'full') {
+        $recommended = $sum_results[$i];
+        break;
+    }
+    if ($sum_results[$i]['class_name'] == 'File' && $sum_results[$i]['support'] == 'partial') {
+        $recommended = $sum_results[$i];
+        break;
+    }
 }
 
 // Helper Functions
-function testCache(ScientiaMobile\WurflCloud\Cache\CacheInterface $cache) {
-	$max_write = 100;
-	$max_unique = 20;
-	$ret = array(
-		'success' => 0,
-		'error' => 0,
-		'write_avg' => '',
-		'read_avg' => '',
-	);
-	$start = microtime(true);
-	$a = 0;
-	for ($i=0;$i<$max_write;$i++) {
-		if ($a >= $max_unique) $a = 0;
-		if ($cache->setDevice("WurflCloud/$i Foobar", array('id'=>'foobar_ver1_subua'.$a,'model_name'=>'foobar'))) {
-				$ret['success']++;
-		} else {
-			$ret['error']++;
-		}
-		$a++;
-	}
-	$time = microtime(true) - $start;
-	$ret['write_avg'] = round(($time / $max_write) * 1000, 3)." ms";
-	$start = microtime(true);
-	for ($i=0;$i<$max_write;$i++) {
-		$result = $cache->getDevice("WurflCloud/$i Foobar");
-		if (is_array($result) && isset($result['id']) && strpos($result['id'], 'foobar_ver1') !== false) {
-			$ret['success']++;
-		} else {
-			$ret['error']++;
-		}
-	}
-	$time = microtime(true) - $start;
-	$ret['read_avg'] = round(($time / $max_write) * 1000, 3)." ms";
-	return $ret;
+function testCache(ScientiaMobile\WurflCloud\Cache\CacheInterface $cache)
+{
+    $max_write = 100;
+    $max_unique = 20;
+    $ret = array(
+        'success' => 0,
+        'error' => 0,
+        'write_avg' => '',
+        'read_avg' => '',
+    );
+    $start = microtime(true);
+    $a = 0;
+    for ($i=0;$i<$max_write;$i++) {
+        if ($a >= $max_unique) {
+            $a = 0;
+        }
+        if ($cache->setDevice("WurflCloud/$i Foobar", array('id'=>'foobar_ver1_subua'.$a,'model_name'=>'foobar'))) {
+            $ret['success']++;
+        } else {
+            $ret['error']++;
+        }
+        $a++;
+    }
+    $time = microtime(true) - $start;
+    $ret['write_avg'] = round(($time / $max_write) * 1000, 3)." ms";
+    $start = microtime(true);
+    for ($i=0;$i<$max_write;$i++) {
+        $result = $cache->getDevice("WurflCloud/$i Foobar");
+        if (is_array($result) && isset($result['id']) && strpos($result['id'], 'foobar_ver1') !== false) {
+            $ret['success']++;
+        } else {
+            $ret['error']++;
+        }
+    }
+    $time = microtime(true) - $start;
+    $ret['read_avg'] = round(($time / $max_write) * 1000, 3)." ms";
+    return $ret;
 }
 
 ?>

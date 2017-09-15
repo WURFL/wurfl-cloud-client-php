@@ -24,7 +24,7 @@ echo "Testing ".get_class($cache)." Performance\n";
 echo "Testing $max Cache Writes...\n";
 $start = microtime(true);
 for ($i=0;$i<$max;$i++) {
-	$ok = $cache->setDevice("Mozilla/$i Foobar", array('id'=>'foobar_ver1','model_name'=>'foobar'));
+    $ok = $cache->setDevice("Mozilla/$i Foobar", array('id'=>'foobar_ver1','model_name'=>'foobar'));
 }
 $time = microtime(true) - $start;
 $avg = round(($time / $max) * 1000, 4)." ms";
@@ -37,8 +37,8 @@ sleep(1);echo '.';sleep(1);echo '.';sleep(1);echo '.';sleep(1);echo '.';sleep(1)
 echo "Testing $max Random Cache Reads\n";
 $start = microtime(true);
 for ($i=0;$i<$max;$i++) {
-	$a = $max - 1 - $i;
-	$cache->getDevice("Mozilla/$a Foobar");
+    $a = $max - 1 - $i;
+    $cache->getDevice("Mozilla/$a Foobar");
 }
 $time = microtime(true) - $start;
 $avg = round(($time / $max) * 1000, 4)." ms";
@@ -51,7 +51,7 @@ sleep(1);echo '.';sleep(1);echo '.';sleep(1);echo '.';sleep(1);echo '.';sleep(1)
 echo "Testing $max Sequential Cache Reads\n";
 $start = microtime(true);
 for ($i=0;$i<$max;$i++) {
-	$cache->getDevice("Mozilla/$i Foobar");
+    $cache->getDevice("Mozilla/$i Foobar");
 }
 $time = microtime(true) - $start;
 $avg = round(($time / $max) * 1000, 4)." ms";
