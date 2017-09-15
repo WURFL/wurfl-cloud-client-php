@@ -4,7 +4,7 @@ namespace ScientiaMobile\WurflCloud\Cache;
 use ScientiaMobile\WurflCloud\Exception;
 
 /**
- * Copyright (c) 2016 ScientiaMobile, Inc.
+ * Copyright (c) 2017 ScientiaMobile, Inc.
  *
  * Please refer to the COPYING.txt file distributed with the software for licensing information.
  *
