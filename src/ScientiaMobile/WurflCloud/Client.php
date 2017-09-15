@@ -136,6 +136,10 @@ class Client {
 		$this->config = $config;
 		$this->cache = ($cache instanceof CacheInterface)? $cache: new Cookie();
 		$this->http_client = ($http_client instanceof AbstractHttpClient)? $http_client: self::getDefaultHttpClient();
+
+		if ($config->compression !== null) {
+			$this->http_client->setUseCompression($config->compression);
+		}
 	}
 	
 	/**
