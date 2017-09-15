@@ -249,7 +249,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase {
 		$_SERVER['HTTP_X_FORWARDED_FOR'] = '2.2.2.2';
 		$_SERVER['HTTP_DEVICE_STOCK_UA'] = 'FooBar/1.0';
 		$_SERVER['HTTP_X_WAP_PROFILE'] = 'http://test.com/uaprof.rdf';
-		$_SERVER['HTTP_ACCEPT'] = 'Stuff';
+		$_SERVER['HTTP_ACCEPT_ENCODING'] = 'gzip';
 
 		$this->client = new Client($this->config, $this->cache, $this->http_client);
 		$this->assertEmpty($this->http_client->getRequestHeaders());
@@ -260,7 +260,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase {
 			'User-Agent' => 'FooBar/1.0',
 			'X-Cloud-Client' => 'WurflCloudClient/PHP_'.$this->client->getClientVersion(),
 			'X-Forwarded-For' => '10.1.2.3, 2.2.2.2',
-			'X-Accept' => 'Stuff',
+			'Accept-Encoding' => 'gzip',
 			'X-Wap-Profile' => 'http://test.com/uaprof.rdf'
 		);
 		$headers = $this->http_client->getRequestHeaders();
@@ -270,7 +270,63 @@ class ClientTest extends \PHPUnit_Framework_TestCase {
 	public function testGetClientVersion() {
 		$this->assertContains('.', $this->client->getClientVersion());
 	}
-	
+
+	/**
+	 * @param $value
+	 * @param $expected
+	 * @dataProvider dataProviderAcceptEncodingHeaderWithCompressionEnabled
+	 */
+	public function testAcceptEncodingHeaderWithCompressionEnabled($value, $expected) {
+		if ($value) {
+			$_SERVER['HTTP_ACCEPT_ENCODING'] = $value;
+		}
+		$this->client = new Client($this->config, $this->cache, $this->http_client);
+		$this->client->detectDevice();
+		$this->assertSame($expected, $this->http_client->getAcceptEncodingValue());
+	}
+
+	public function dataProviderAcceptEncodingHeaderWithCompressionEnabled() {
+		return [
+			[null, 'gzip'],
+			['gzip', 'gzip'],
+			['Gzip', 'Gzip'],
+			['compress', 'gzip, compress'],
+			['gzipd', 'gzip, gzipd'],
+			['x-bzip2,deflate,gzip', 'x-bzip2,deflate,gzip'],
+			['br,bzip2,compress, x-gzip', 'gzip, br,bzip2,compress, x-gzip'],
+			['gzip;q=1.0, deflate;q=0.8, chunked;q=0.6', 'gzip;q=1.0, deflate;q=0.8, chunked;q=0.6'],
+			['deflate;q=0.8, chunked;q=0.6', 'gzip, deflate;q=0.8, chunked;q=0.6'],
+		];
+	}
+
+	/**
+	 * @param $value
+	 * @param $expected
+	 * @dataProvider dataProviderAcceptEncodingHeaderWithCompressionDisabled
+	 */
+	public function testAcceptEncodingHeaderWithCompressionDisabled($value, $expected) {
+		if ($value) {
+			$_SERVER['HTTP_ACCEPT_ENCODING'] = $value;
+		}
+		$this->config->compression = false;
+		$this->client = new Client($this->config, $this->cache, $this->http_client);
+		$this->client->detectDevice();
+		$this->assertSame($expected, $this->http_client->getAcceptEncodingValue());
+	}
+
+	public function dataProviderAcceptEncodingHeaderWithCompressionDisabled() {
+		return [
+			[null, false],
+			['gzip', 'gzip'],
+			['Gzip', 'Gzip'],
+			['compress', 'compress'],
+			['gzipd', 'gzipd'],
+			['x-bzip2,deflate,gzip', 'x-bzip2,deflate,gzip'],
+			['br,bzip2,compress, x-gzip', 'br,bzip2,compress, x-gzip'],
+			['gzip;q=1.0, deflate;q=0.8, chunked;q=0.6', 'gzip;q=1.0, deflate;q=0.8, chunked;q=0.6'],
+			['deflate;q=0.8, chunked;q=0.6', 'deflate;q=0.8, chunked;q=0.6'],
+		];
+	}
 }
 
 class MockHttpClient extends Fsock {

@@ -63,12 +63,16 @@ class FileGetContents extends Fsock {
 		// Setup HTTP Request headers
 		$http_headers = array();
 		$http_headers[] = "Host: $host";
-		if ($this->use_compression === true) {
-			$http_headers[] = "Accept-Encoding: gzip";
+
+		$accept_encoding = $this->getAcceptEncodingValue();
+		if ($accept_encoding) {
+			$http_headers[] = "Accept-Encoding: " . $accept_encoding;
 		}
+
 		$http_headers[] = "Accept: */*";
 		$http_headers[] = "Authorization: Basic ".base64_encode($config->api_key);
 		foreach ($this->request_headers as $key => $value) {
+			if ($key === "Accept-Encoding") continue; //we've already handled the Accept-Encoding header
 			$http_headers[] = "$key: $value";
 		}
 		$http_headers[] = "Connection: Close";

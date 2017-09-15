@@ -109,6 +109,36 @@ abstract class AbstractHttpClient {
 	public function wasCalled() {
 		return ($this->success !== null);
 	}
+
+	/**
+	 * Returns the value for the Accept-Encoding header to use in the request
+	 *
+	 * @return false|string
+	 */
+	public function getAcceptEncodingValue() {
+
+		if (!isset($this->request_headers['Accept-Encoding'])) {
+			if ($this->use_compression === true) {
+				return 'gzip';
+			}
+			return false;
+		}
+
+		$accept_encoding = $this->request_headers['Accept-Encoding'];
+		if ($this->use_compression !== true) {
+			return $accept_encoding;
+		}
+
+		$values = array_map('trim', explode(',', $accept_encoding));
+		foreach ($values as $value) {
+			$kv = array_map('trim', explode(';', $value));
+			if (strtolower($kv[0]) === 'gzip') {
+				return $accept_encoding;
+			}
+		}
+
+		return 'gzip, ' . $accept_encoding;
+	}
 	
 	/**
 	 * Returns the response body using the PHP cURL Extension

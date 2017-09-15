@@ -41,9 +41,10 @@ class Curl extends AbstractHttpClient {
 		$http_headers = $this->getCurlHeaders();
 
 		// Compression
-		if ($this->use_compression === true && $this->curl_supports_encoding === true) {
+		$accept_encoding = $this->getAcceptEncodingValue();
+		if ($accept_encoding && $this->curl_supports_encoding === true) {
 			$this->option(CURLOPT_ENCODING, '');
-			$http_headers[] = "Accept-Encoding: gzip";
+			$http_headers[] = "Accept-Encoding: " . $accept_encoding;
 		}
 
 		// Setup CURL
@@ -100,6 +101,7 @@ class Curl extends AbstractHttpClient {
 			"Accept: */*",
 		);
 		foreach ($this->request_headers as $key => $value) {
+			if ($key === "Accept-Encoding") continue; //we'll handle the Accept-Encoding header separately
 			$headers[] = "$key: $value";
 		}
 		return $headers;

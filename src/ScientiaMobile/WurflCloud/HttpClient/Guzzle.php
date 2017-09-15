@@ -65,8 +65,9 @@ class Guzzle extends AbstractHttpClient {
 		$http_headers["Connection"] = "Close";
 
 		// Compression
-		if ($this->use_compression === true) {
-			$http_headers['Accept-Encoding'] = 'gzip';
+		$accept_encoding = $this->getAcceptEncodingValue();
+		if ($accept_encoding) {
+			$http_headers['Accept-Encoding'] = $accept_encoding;
 		}
 
 		$options = array(
