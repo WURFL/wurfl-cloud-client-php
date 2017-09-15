@@ -48,12 +48,16 @@ class Fsock extends AbstractHttpClient {
 		// Setup HTTP Request headers
 		$http_header = "GET $request_path HTTP/1.0\r\n";
 		$http_header.= "Host: $host\r\n";
-		if ($this->use_compression === true) {
-			$http_header.= "Accept-Encoding: gzip\r\n";
+
+		$accept_encoding = $this->getAcceptEncodingValue();
+		if ($accept_encoding) {
+			$http_header .= "Accept-Encoding: " . $accept_encoding . "\r\n";
 		}
+
 		$http_header.= "Accept: */*\r\n";
 		$http_header.= "Authorization: Basic ".base64_encode($config->api_key)."\r\n";
 		foreach ($this->request_headers as $key => $value) {
+			if ($key === "Accept-Encoding") continue; //we've already handled the Accept-Encoding header
 			$http_header .= "$key: $value\r\n";
 		}
 		$http_header.= "Connection: Close\r\n";

@@ -2,6 +2,7 @@
 
 namespace ScientiaMobile\WurflCloud\HttpClient;
 
+use ScientiaMobile\WurflCloud\Cache\NullCache;
 use ScientiaMobile\WurflCloud\HttpClient\AbstractHttpClient;
 use ScientiaMobile\WurflCloud\Config;
 use ScientiaMobile\WurflCloud\Client;
@@ -188,5 +189,39 @@ abstract class HttpClientTestCase extends \PHPUnit_Framework_TestCase {
 		} else {
 			$this->assertInstanceOf('ScientiaMobile\\WurflCloud\\HttpClient\\Fsock', $client);
 		}
+	}
+
+	public function testAcceptEncodingHeaderCompressionEnabled() {
+
+		$this->config->compression = true;
+
+		$client = new Client($this->config, new NullCache(), $this->http_client);
+
+		$ua = 'Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko';
+
+		$client->detectDevice(array('HTTP_USER_AGENT' => $ua, 'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'));
+
+		$this->assertFalse($client->capabilities['is_robot']);
+
+		$client->detectDevice(array('HTTP_USER_AGENT' => $ua, 'HTTP_ACCEPT_ENCODING' => 'compress'));
+
+		$this->assertTrue($client->capabilities['is_robot']);
+	}
+
+	public function testAcceptEncodingHeaderCompressionDisabled() {
+
+		$this->config->compression = false;
+
+		$client = new Client($this->config, new NullCache(), $this->http_client);
+
+		$ua = 'Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko';
+
+		$client->detectDevice(array('HTTP_USER_AGENT' => $ua, 'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'));
+
+		$this->assertFalse($client->capabilities['is_robot']);
+
+		$client->detectDevice(array('HTTP_USER_AGENT' => $ua, 'HTTP_ACCEPT_ENCODING' => 'compress'));
+
+		$this->assertTrue($client->capabilities['is_robot']);
 	}
 }

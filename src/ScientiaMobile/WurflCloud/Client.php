@@ -202,12 +202,12 @@ class Client {
 		} else if ($ip) {
 			$this->http_client->addHttpRequestHeader('X-Forwarded-For', $ip);
 		}
-		
-		// We use 'X-Accept' so it doesn't stomp on our deflate/gzip header
-		$this->http_client->addHttpRequestHeaderIfExists($this->http_request, 'HTTP_ACCEPT', 'X-Accept');
+
 		if (!$this->http_client->addHttpRequestHeaderIfExists($this->http_request, 'HTTP_X_WAP_PROFILE', 'X-Wap-Profile')) {
 			$this->http_client->addHttpRequestHeaderIfExists($this->http_request, 'HTTP_PROFILE', 'X-Wap-Profile');
 		}
+
+		$this->http_client->addHttpRequestHeaderIfExists($this->http_request, 'HTTP_ACCEPT_ENCODING', 'Accept-Encoding');
 	}
 	
 	private function getRequestPath() {
