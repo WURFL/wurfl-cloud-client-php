@@ -1,5 +1,12 @@
 # Change log
 
+[2019-03-29] v2.1.3
+ - Added license info to composer.json
+
+[2017-09-15] v2.1.2
+- Bugfix: Client Accept-Encoding header was not being passed properly to WURFL Cloud Service
+- Updated to PSR2 code style
+
 [2017-01-18] v2.1.1
  - Bugfix: Non-default umasks no longer cause cache files to be written with wrong permissions
 
