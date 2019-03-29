@@ -2,7 +2,7 @@
 	"name": "scientiamobile/wurflcloud",
 	"description": "ScientiaMobile PHP WURFL Cloud Client",
 	"license": [
-            "GPL-2.0",
+            "GPL-2.0-or-later",
             "MIT"
         ],
 	"authors": [

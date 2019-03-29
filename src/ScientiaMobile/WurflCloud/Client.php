@@ -97,7 +97,7 @@ class Client
      * The version of this client
      * @var string
      */
-    private $client_version = '2.1.3';
+    private $client_version = '2.1.4';
     
     /**
      * Client configuration object
