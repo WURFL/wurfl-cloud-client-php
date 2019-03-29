@@ -1,6 +1,10 @@
 {
 	"name": "scientiamobile/wurflcloud",
 	"description": "ScientiaMobile PHP WURFL Cloud Client",
+	"license": [
+            "GPL-2.0",
+            "MIT"
+        ],
 	"authors": [
 		{
 			"name": "Steve Kamerman",
