@@ -5,11 +5,13 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update && apt-get install -y \
         memcached \
+        redis-server \
         php5-cli \
         php5-curl \
         php5-apcu \
         php5-memcache \
         php5-memcached \
+        php5-redis \
     && echo "apc.enable_cli=1" >> /etc/php5/mods-available/apcu.ini \
     && php5enmod php5-apcu \
     && php5enmod php5-memcache \

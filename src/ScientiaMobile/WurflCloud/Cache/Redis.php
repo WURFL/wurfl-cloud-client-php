@@ -93,8 +93,13 @@ class Redis implements CacheInterface
             throw new Exception('Please verify the Redis extension is loaded');
         }
         
-        $this->cache = ($redis instanceof \Redis)? $redis: new \Redis();
-        $this->cache->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_PHP);
+        if ($redis instanceof \Redis) {
+            $this->cache = $redis;
+            $this->cache->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_PHP);
+            return;
+        }
+
+        $this->cache = new \Redis();
     }
     
     /**
