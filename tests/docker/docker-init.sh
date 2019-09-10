@@ -3,5 +3,5 @@
 service memcached start
 
 cd /code
-/usr/local/bin/composer install
+/usr/bin/composer install
 vendor/bin/phpunit -vvvv
