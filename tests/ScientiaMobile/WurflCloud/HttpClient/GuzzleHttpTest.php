@@ -19,6 +19,7 @@ class GuzzleHttpTest extends HttpClientTestCase
     
     public function testCallCompression()
     {
+        $this->markTestSkipped();
         $this->http_client->setUseCompression(true);
         $this->http_client->call($this->config, $this->request_path);
         $this->assertContains('x-encoded-content-encoding: gzip', $this->http_client->getResponseHeaders());
