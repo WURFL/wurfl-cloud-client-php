@@ -67,7 +67,6 @@ abstract class HttpClientTestCase extends \PHPUnit_Framework_TestCase
      */
     public function testCallBadPath()
     {
-        $this->http_client->setTimeout(50);
         $this->http_client->call($this->config, '/foo/bar');
     }
 
@@ -171,8 +170,12 @@ abstract class HttpClientTestCase extends \PHPUnit_Framework_TestCase
     public function testCallTimeout()
     {
         $timeout = 5;
-        $fail_after = 300;
+        $fail_after = 80;
         
+        $start_time = microtime(true);
+        gethostbyname("api.wurflcloud.com");
+        $dns_lookup_time = (microtime(true) - $start_time);
+
         $this->http_client->setTimeout($timeout);
         $this->config->clearServers();
         $this->config->addCloudServer('foo', 'api.wurflcloud.com:12345');
@@ -189,8 +192,7 @@ abstract class HttpClientTestCase extends \PHPUnit_Framework_TestCase
             $this->assertEquals(0, $e->getHttpStatusCode());
         }
         
-        $total_time = (microtime(true) - $start_time) * 1000;
-        
+        $total_time = (microtime(true) - $start_time - $dns_lookup_time) * 1000;
         $this->assertLessThan($fail_after, $total_time);
     }
     
