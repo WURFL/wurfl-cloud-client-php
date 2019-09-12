@@ -5,6 +5,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update && apt-get install -y \
         memcached \
+        redis-server \
         php7.0-cli \
         php7.0-curl \
         php7.0-json \
@@ -12,6 +13,7 @@ RUN apt-get update && apt-get install -y \
         php-apcu \
         php-memcache \
         php-memcached \
+        php-redis \
     && echo "apc.enable_cli=1" >> /etc/php/7.0/mods-available/apcu.ini \
     && phpenmod apcu memcache memcached \
     && apt-get -qy autoremove \
