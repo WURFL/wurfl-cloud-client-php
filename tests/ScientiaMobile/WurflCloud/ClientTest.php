@@ -262,6 +262,15 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $_SERVER['HTTP_DEVICE_STOCK_UA'] = 'FooBar/1.0';
         $_SERVER['HTTP_X_WAP_PROFILE'] = 'http://test.com/uaprof.rdf';
         $_SERVER['HTTP_ACCEPT_ENCODING'] = 'gzip';
+        $_SERVER['HTTP_SEC_CH_UA'] = '" Not A;Brand";v="99", "Chromium";v="100", "WURFL";v="100"';
+        $_SERVER['HTTP_SEC_CH_UA_MOBILE'] = '?1';
+        $_SERVER['HTTP_SEC_CH_UA_PLATFORM'] = 'Android';
+        $_SERVER['HTTP_SEC_CH_UA_PLATFORM_VERSION'] = '12';
+        $_SERVER['HTTP_SEC_CH_UA_MODEL'] = 'Pixel 6';
+        $_SERVER['HTTP_SEC_CH_UA_FULL_VERSION'] = '100.0.4896.60';
+        $_SERVER['HTTP_SEC_CH_UA_FULL_VERSION_LIST'] = '" Not A;Brand";v="99.0.0.0", "Chromium";v="100.0.4896.60", "WURFL";v="100.0.4896.60"';
+        $_SERVER['HTTP_SEC_CH_UA_ARCH'] = 'arm';
+        $_SERVER['HTTP_SEC_CH_UA_BITNESS'] = '64';
 
         $this->client = new Client($this->config, $this->cache, $this->http_client);
         $this->assertEmpty($this->http_client->getRequestHeaders());
@@ -273,7 +282,17 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             'X-Cloud-Client' => 'WurflCloudClient/PHP_'.$this->client->getClientVersion(),
             'X-Forwarded-For' => '10.1.2.3, 2.2.2.2',
             'Accept-Encoding' => 'gzip',
-            'X-Wap-Profile' => 'http://test.com/uaprof.rdf'
+            'X-Wap-Profile' => 'http://test.com/uaprof.rdf',
+            'Sec-CH-UA' => '" Not A;Brand";v="99", "Chromium";v="100", "WURFL";v="100"',
+            'Sec-CH-UA-Mobile' => '?1',
+            'Sec-CH-UA-Platform' => 'Android' ,
+            'Sec-CH-UA-Platform-Version' => '12',
+            'Sec-CH-UA-Model' => 'Pixel 6',
+            'Sec-CH-UA-Full-Version' => '100.0.4896.60',
+            'Sec-CH-UA-Full-Version-List' => '" Not A;Brand";v="99.0.0.0", "Chromium";v="100.0.4896.60", "WURFL";v="100.0.4896.60"',
+            'Sec-CH-UA-Arch' => 'arm',
+            'Sec-CH-UA-Bitness' => '64'
+
         );
         $headers = $this->http_client->getRequestHeaders();
         $this->assertEquals($expected_headers, $headers);

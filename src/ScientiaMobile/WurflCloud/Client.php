@@ -215,6 +215,17 @@ class Client
         }
 
         $this->http_client->addHttpRequestHeaderIfExists($this->http_request, 'HTTP_ACCEPT_ENCODING', 'Accept-Encoding');
+        
+        // Add User-Agent Client Hint headers
+        $this->http_client->addHttpRequestHeaderIfExists($this->http_request, 'HTTP_SEC_CH_UA', 'Sec-CH-UA');
+        $this->http_client->addHttpRequestHeaderIfExists($this->http_request, 'HTTP_SEC_CH_UA_MOBILE', 'Sec-CH-UA-Mobile');
+        $this->http_client->addHttpRequestHeaderIfExists($this->http_request, 'HTTP_SEC_CH_UA_PLATFORM', 'Sec-CH-UA-Platform');
+        $this->http_client->addHttpRequestHeaderIfExists($this->http_request, 'HTTP_SEC_CH_UA_PLATFORM_VERSION', 'Sec-CH-UA-Platform-Version');
+        $this->http_client->addHttpRequestHeaderIfExists($this->http_request, 'HTTP_SEC_CH_UA_MODEL', 'Sec-CH-UA-Model');
+        $this->http_client->addHttpRequestHeaderIfExists($this->http_request, 'HTTP_SEC_CH_UA_FULL_VERSION', 'Sec-CH-UA-Full-Version');
+        $this->http_client->addHttpRequestHeaderIfExists($this->http_request, 'HTTP_SEC_CH_UA_FULL_VERSION_LIST', 'Sec-CH-UA-Full-Version-List');
+        $this->http_client->addHttpRequestHeaderIfExists($this->http_request, 'HTTP_SEC_CH_UA_ARCH', 'Sec-CH-UA-Arch');
+        $this->http_client->addHttpRequestHeaderIfExists($this->http_request, 'HTTP_SEC_CH_UA_BITNESS', 'Sec-CH-UA-Bitness');
     }
     
     private function getRequestPath()
