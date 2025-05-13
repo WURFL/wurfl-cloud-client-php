@@ -11,6 +11,7 @@
 			"email": "support@scientiamobile.com"
 		}
 	],
+	"abandoned": true,
 	"require": {
 		"php": ">=5.3.0"
 	},

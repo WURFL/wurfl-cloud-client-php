@@ -1,5 +1,15 @@
 # ScientiaMobile WURFL Cloud Client for PHP
 
+## WURFL Cloud Deprecation Notice
+
+As of Q3 2023, WURFL Cloud and its associated client libraries for all programming languages have been officially deprecated and decommissioned. No further updates, including security fixes, will be provided. Continued use of WURFL Cloud or its clients is strongly discouraged and may expose you to security risks, and continued usage is at your own risk.
+
+We strongly urge all users to migrate to [WURFL Microservice](https://scientiamobile.com/wurfl-microservice/) or another [supported WURFL device detection solution](https://scientiamobile.com/product-selection-tool/) as soon as possible. For guidance on alternative products and pricing, please [contact ScientiaMobile](https://scientiamobile.com/contact-us/).
+
+Thank you for your understanding and continued support.
+
+----
+
 The WURFL Cloud Service by ScientiaMobile, Inc., is a cloud-based
 mobile device detection service that can quickly and accurately
 detect over 500 capabilities of visiting devices.  It can differentiate
